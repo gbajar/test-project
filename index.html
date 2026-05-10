@@ -170,6 +170,10 @@
         passwordError.textContent = 'Password must be at least 6 characters.';
         passwordInput.classList.add('error');
         valid = false;
+      } else if (!/\d/.test(passwordInput.value)) {
+        passwordError.textContent = 'Password must contain at least one number.';
+        passwordInput.classList.add('error');
+        valid = false;
       }
 
       return valid;
