@@ -170,6 +170,10 @@
         passwordError.textContent = passwordValidationError;
         passwordInput.classList.add('error');
         valid = false;
+      } else if (!/[0-9]/.test(passwordInput.value)) {
+        passwordError.textContent = 'Password must contain at least one number.';
+        passwordInput.classList.add('error');
+        valid = false;
       }
 
       return valid;
