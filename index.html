@@ -136,8 +136,10 @@
     </form>
   </div>
 
-  <script src="passwordValidator.js"></script>
-  <script>
+
+  <script type="module">
+    import { validatePassword } from './src/validation.js';
+
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
@@ -163,10 +165,9 @@
         valid = false;
       }
 
-      // Use shared validator
-      const pwdResult = validatePassword(passwordInput.value);
-      if (!pwdResult.valid) {
-        passwordError.textContent = pwdResult.message;
+      const passwordValidationError = validatePassword(passwordInput.value);
+      if (passwordValidationError) {
+        passwordError.textContent = passwordValidationError;
         passwordInput.classList.add('error');
         valid = false;
       }
