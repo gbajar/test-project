@@ -3,246 +3,116 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App</title>
+  <title>Login</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #111;
       min-height: 100vh;
-    }
-
-    /* ── Views ── */
-    .view { display: none; }
-
-    #loginView.active {
       display: flex;
-      min-height: 100vh;
       align-items: center;
       justify-content: center;
+      background: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    #appShell.active { display: block; }
-
-    /* ── Login card ── */
     .card {
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
       padding: 40px 36px;
       width: 100%;
       max-width: 380px;
     }
 
-    .card h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 24px;
+      text-align: center;
+    }
 
-    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
 
-    label { font-size: 0.875rem; font-weight: 500; color: #374151; }
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+    }
 
-    .field input {
+    input {
       padding: 10px 12px;
       border: 1px solid #d1d5db;
       border-radius: 6px;
       font-size: 0.95rem;
+      color: #111;
       outline: none;
       transition: border-color 0.15s;
     }
 
-    .field input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.15); }
-    .field input.error { border-color: #ef4444; }
-
-    .field-error { font-size: 0.8rem; color: #ef4444; min-height: 1em; }
-
-    .input-wrap { position: relative; display: flex; align-items: center; }
-
-    .input-wrap input {
-      padding: 10px 38px 10px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.15s;
-      width: 100%;
+    input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
     }
-    .input-wrap input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.15); }
-    .input-wrap input.error { border-color: #ef4444; }
 
-    .toggle-pw {
-      position: absolute; right: 10px;
-      background: none; border: none; padding: 0;
-      color: #9ca3af; cursor: pointer; display: flex; align-items: center;
+    input.error {
+      border-color: #ef4444;
     }
-    .toggle-pw:hover { color: #4f46e5; }
-    /* Keep toggle visible even when the input has an error so the user can still toggle visibility */
-    .input-wrap input.error ~ .toggle-pw { display: flex; }
+
+    .field-error {
+      font-size: 0.8rem;
+      color: #ef4444;
+      min-height: 1em;
+    }
 
     .forgot {
-      display: block; text-align: right; font-size: 0.8rem;
-      color: #4f46e5; text-decoration: none;
-      margin-top: -10px; margin-bottom: 22px;
+      display: block;
+      text-align: right;
+      font-size: 0.8rem;
+      color: #4f46e5;
+      text-decoration: none;
+      margin-top: -10px;
+      margin-bottom: 22px;
     }
+
     .forgot:hover { text-decoration: underline; }
 
     button[type="submit"] {
-      width: 100%; padding: 11px;
-      background: #4f46e5; color: #fff;
-      border: none; border-radius: 6px;
-      font-size: 1rem; font-weight: 500;
-      cursor: pointer; transition: background 0.15s;
+      width: 100%;
+      padding: 11px;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
     }
+
     button[type="submit"]:hover { background: #4338ca; }
+    button[type="submit"]:active { background: #3730a3; }
 
-    /* ── Nav ── */
-    nav {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
+    .toast {
+      display: none;
+      margin-top: 18px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      text-align: center;
     }
 
-    .nav-logo { font-weight: 700; font-size: 1.1rem; color: #4f46e5; }
-
-    .nav-links { display: flex; gap: 4px; }
-
-    .nav-link {
-      padding: 6px 14px; border-radius: 6px;
-      font-size: 0.875rem; font-weight: 500;
-      color: #6b7280; cursor: pointer;
-      border: none; background: none;
-    }
-    .nav-link:hover { background: #f3f4f6; color: #111; }
-    .nav-link.active { background: #eef2ff; color: #4f46e5; }
-
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-user { font-size: 0.875rem; color: #6b7280; }
-
-    .btn-logout {
-      font-size: 0.8rem; padding: 5px 12px;
-      border: 1px solid #d1d5db; border-radius: 6px;
-      background: none; cursor: pointer; color: #374151;
-    }
-    .btn-logout:hover { background: #f3f4f6; }
-
-    /* ── Page shell ── */
-    .main { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
-    .page-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 24px; }
-
-    /* ── Stat cards ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .stat-card {
-      background: #fff; border-radius: 8px;
-      padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-
-    .stat-label {
-      font-size: 0.75rem; color: #6b7280; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;
-    }
-
-    .stat-value { font-size: 2rem; font-weight: 700; }
-    .stat-card.indigo .stat-value { color: #4f46e5; }
-    .stat-card.green  .stat-value { color: #059669; }
-    .stat-card.amber  .stat-value { color: #d97706; }
-
-    /* ── Table ── */
-    .section-title { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
-
-    .table-wrap {
-      background: #fff; border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden;
-    }
-
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-
-    th {
-      background: #f9fafb; padding: 10px 16px; text-align: left;
-      font-size: 0.75rem; font-weight: 600; color: #6b7280;
-      text-transform: uppercase; letter-spacing: 0.04em;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    td { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-    tr:last-child td { border-bottom: none; }
-
-    .badge {
-      display: inline-block; padding: 2px 8px;
-      border-radius: 999px; font-size: 0.75rem; font-weight: 500;
-    }
-    .badge.completed { background: #d1fae5; color: #065f46; }
-    .badge.pending   { background: #fef3c7; color: #92400e; }
-
-    .empty-state { text-align: center; padding: 40px; color: #9ca3af; font-size: 0.9rem; }
-
-    /* ── Todos page ── */
-    .todo-add { display: flex; gap: 8px; margin-bottom: 20px; }
-
-    .todo-add input {
-      flex: 1; padding: 10px 14px;
-      border: 1px solid #d1d5db; border-radius: 6px;
-      font-size: 0.95rem; outline: none;
-    }
-    .todo-add input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.15); }
-
-    .btn-primary {
-      padding: 10px 18px; background: #4f46e5; color: #fff;
-      border: none; border-radius: 6px;
-      font-size: 0.9rem; font-weight: 500; cursor: pointer; white-space: nowrap;
-    }
-    .btn-primary:hover { background: #4338ca; }
-
-    .filters { display: flex; gap: 4px; margin-bottom: 16px; }
-
-    .filter-btn {
-      padding: 5px 14px; border-radius: 6px;
-      font-size: 0.8rem; font-weight: 500;
-      border: none; background: none; color: #6b7280; cursor: pointer;
-    }
-    .filter-btn:hover { background: #f3f4f6; }
-    .filter-btn.active { background: #eef2ff; color: #4f46e5; }
-
-    .todo-list {
-      background: #fff; border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden;
-    }
-
-    .todo-item {
-      display: flex; align-items: center;
-      padding: 14px 16px; border-bottom: 1px solid #f3f4f6; gap: 12px;
-    }
-    .todo-item:last-child { border-bottom: none; }
-
-    .todo-item input[type="checkbox"] {
-      width: 16px; height: 16px; accent-color: #4f46e5;
-      cursor: pointer; flex-shrink: 0;
-    }
-
-    .todo-text { flex: 1; font-size: 0.925rem; color: #374151; }
-    .todo-text.done { text-decoration: line-through; color: #9ca3af; }
-
-    .btn-delete {
-      background: none; border: none;
-      color: #d1d5db; cursor: pointer;
-      font-size: 0.85rem; padding: 3px 7px; border-radius: 4px;
-    }
-    .btn-delete:hover { color: #ef4444; background: #fef2f2; }
+    .toast.success { background: #d1fae5; color: #065f46; }
+    .toast.fail    { background: #fee2e2; color: #991b1b; }
   </style>
 </head>
 <body>
-
-<!-- LOGIN VIEW -->
-<div id="loginView" class="view active">
   <div class="card">
     <h1>Sign in</h1>
     <form id="loginForm" novalidate>
@@ -251,29 +121,20 @@
         <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
         <span class="field-error" id="emailError"></span>
       </div>
+
       <div class="field">
         <label for="password">Password</label>
-        <div class="input-wrap">
-          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
-          <button type="button" id="togglePassword" class="toggle-pw" onclick="togglePasswordVisibility()" tabindex="-1" aria-label="Show password">
-            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-            <svg id="eyeOffIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-              <line x1="1" y1="1" x2="23" y2="23"/>
-            </svg>
-          </button>
-        </div>
+        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
         <span class="field-error" id="passwordError"></span>
       </div>
+
       <a href="#" class="forgot" tabindex="-1">Forgot password?</a>
+
       <button type="submit">Sign in</button>
+
+      <div class="toast" id="toast"></div>
     </form>
   </div>
-</div>
 
 
   <script type="module">
@@ -332,33 +193,6 @@
 
       showToast('Signed in as ' + emailInput.value.trim(), 'success');
     });
-
-    if (visible.length === 0) {
-      list.innerHTML = '<div class="empty-state">Nothing here.</div>';
-      return;
-    }
-
-    list.innerHTML = visible.map(t => `
-      <div class="todo-item">
-        <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})">
-        <span class="todo-text ${t.done ? 'done' : ''}">${esc(t.text)}</span>
-        <button class="btn-delete" onclick="deleteTodo(${t.id})" title="Delete">✕</button>
-      </div>
-    `).join('');
-  }
-
-  function togglePasswordVisibility() {
-    const input = document.getElementById('password');
-    const isHidden = input.type === 'password';
-    input.type = isHidden ? 'text' : 'password';
-    document.getElementById('eyeIcon').style.display    = isHidden ? 'none'  : '';
-    document.getElementById('eyeOffIcon').style.display = isHidden ? ''      : 'none';
-    document.getElementById('togglePassword').setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-  }
-
-  function esc(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-</script>
+  </script>
 </body>
 </html>
