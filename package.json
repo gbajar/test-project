@@ -1,0 +1,11 @@
+{
+  "name": "repo-test-project",
+  "version": "1.0.0",
+  "description": "Tests for password validation",
+  "scripts": {
+    "test": "node tests/test_password_validation.js"
+  },
+  "devDependencies": {
+    "jsdom": "^22.0.0"
+  }
+}
