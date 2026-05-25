@@ -124,7 +124,10 @@
 
       <div class="field">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" id="togglePassword" aria-label="Toggle password visibility">Show</button>
+        </div>
         <span class="field-error" id="passwordError"></span>
       </div>
 
@@ -143,6 +146,8 @@
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    let showPassword = false;
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
     const toast = document.getElementById('toast');
@@ -184,6 +189,23 @@
       toast.className = 'toast ' + type;
       toast.style.display = 'block';
     }
+
+    function updatePasswordType() {
+      if (!passwordInput) return;
+      passwordInput.type = showPassword ? 'text' : 'password';
+      if (togglePassword) togglePassword.textContent = showPassword ? 'Hide' : 'Show';
+    }
+
+    if (togglePassword) {
+      togglePassword.addEventListener('click', function () {
+        showPassword = !showPassword;
+        updatePasswordType();
+      });
+    }
+
+    // ensure initial state is correct
+    updatePasswordType();
+
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
