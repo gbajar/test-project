@@ -76,7 +76,7 @@
       color: #9ca3af; cursor: pointer; display: flex; align-items: center;
     }
     .toggle-pw:hover { color: #4f46e5; }
-    .input-wrap input.error ~ .toggle-pw { display: none; }
+    /* keep toggle visible even when input has error */
 
     .forgot {
       display: block; text-align: right; font-size: 0.8rem;
@@ -342,6 +342,23 @@
   let nextId = 1;
   let filter = 'all';
 
+  let showPassword = false;
+
+  function updatePasswordUI() {
+    const input = document.getElementById('password');
+    const eye = document.getElementById('eyeIcon');
+    const eyeOff = document.getElementById('eyeOffIcon');
+    const toggle = document.getElementById('togglePassword');
+    if (!input || !eye || !eyeOff || !toggle) return;
+    input.type = showPassword ? 'text' : 'password';
+    eye.style.display = showPassword ? 'none' : '';
+    eyeOff.style.display = showPassword ? '' : 'none';
+    toggle.setAttribute('aria-label', showPassword ? 'Hide password' : 'Show password');
+  }
+
+  // Initialize UI
+  updatePasswordUI();
+
   // ── Login ──────────────────────────────────────────────
   document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -489,13 +506,18 @@
   }
 
   function togglePasswordVisibility() {
-    const input = document.getElementById('password');
-    const isHidden = input.type === 'password';
-    input.type = isHidden ? 'text' : 'password';
-    document.getElementById('eyeIcon').style.display    = isHidden ? 'none'  : '';
-    document.getElementById('eyeOffIcon').style.display = isHidden ? ''      : 'none';
-    document.getElementById('togglePassword').setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    // toggle the boolean state and update the UI from a single source of truth
+    showPassword = !showPassword;
+    updatePasswordUI();
   }
+
+  // keep UI icons in sync if the input value or classes change
+  (function syncPasswordUI() {
+    const pwInput = document.getElementById('password');
+    if (!pwInput) return;
+    pwInput.addEventListener('input', updatePasswordUI);
+    pwInput.addEventListener('blur', updatePasswordUI);
+  })();
 
   function esc(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
