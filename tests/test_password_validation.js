@@ -28,13 +28,13 @@ JSDOM.fromFile(indexPath, { runScripts: 'dangerously', resources: 'usable' })
         process.exit(1);
       }
 
-      // Test: password with at least one digit should pass (and length >= 6)
-      password.value = 'abcde1';
+      // Test: password with at least one digit and special character should pass (and length >= 6)
+      password.value = 'abcde1!';
       const valid2 = window.validate();
       try {
-        assert.strictEqual(valid2, true, 'Validation should pass for password with a digit');
+        assert.strictEqual(valid2, true, 'Validation should pass for password with a digit and special character');
       } catch (err) {
-        console.error('Test failed: password with digit should be valid');
+        console.error('Test failed: password with digit and special character should be valid');
         console.error(err && err.message);
         process.exit(1);
       }

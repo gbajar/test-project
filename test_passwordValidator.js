@@ -19,7 +19,7 @@ function shouldPass(pwd) {
 shouldFail('', 'Password is required.');
 shouldFail('abc', 'Password must be at least 6 characters.');
 shouldFail('abcdef', 'Password must contain at least one number');
-shouldPass('abcd1f');
-shouldPass('123456');
+shouldPass('abcd1f!');
+shouldPass('123456!');
 
 console.log('All tests passed');

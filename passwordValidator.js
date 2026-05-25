@@ -21,6 +21,11 @@
       return { valid: false, message: 'Password must contain at least one number' };
     }
 
+    // Must contain at least one special character
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return { valid: false, message: 'Password must contain at least one special character (e.g., !, @, #, $).' };
+    }
+
     return { valid: true };
   };
 });
