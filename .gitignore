@@ -8,8 +8,6 @@ build/
 npm-debug.log*
 .DS_Store
 coverage/
-package.json
-package-lock.json
 *.test.js
 test/
 tests/
