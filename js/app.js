@@ -30,9 +30,9 @@ function updateDashboard() {
   if (recent.length === 0) {
     tbody.innerHTML = '<tr><td colspan="3" class="empty-state">No todos yet — add some on the Todos page.</td></tr>';
   } else {
-    tbody.innerHTML = recent.map(t => `
-      <tr>
-        <td>${t.id}</td>
+    tbody.innerHTML = recent.map((t, index) => `
+      <tr data-id="${t.id}">
+        <td>${index + 1}</td>
         <td>${esc(t.text)}</td>
         <td><span class="badge ${t.done ? 'completed' : 'pending'}">${t.done ? 'Completed' : 'Pending'}</span></td>
       </tr>
