@@ -10,6 +10,8 @@ function validateLogin() {
   email.classList.remove('error');
   password.classList.remove('error');
 
+  const passwordValue = password.value.trim();
+
   if (!email.value.trim()) {
     emailErr.textContent = 'Email is required.';
     email.classList.add('error');
@@ -20,15 +22,19 @@ function validateLogin() {
     valid = false;
   }
 
-  if (!password.value) {
-    passErr.textContent = 'Password is required.';
+  if (!passwordValue) {
+    passErr.textContent = 'Password must not be blank.';
     password.classList.add('error');
     valid = false;
-  } else if (password.value.length < 6) {
+  } else if (passwordValue.length < 6) {
     passErr.textContent = 'Password must be at least 6 characters.';
     password.classList.add('error');
     valid = false;
   }
 
   return valid;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { validateLogin };
 }
