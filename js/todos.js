@@ -2,6 +2,11 @@ function addTodo() {
   const input = document.getElementById('todoInput');
   const text  = input.value.trim();
   if (!text) return;
+  if (todos.some(t => t.text.trim().toLowerCase() === text.toLowerCase())) {
+    alert('This task already exists.');
+    return;
+  }
+
   todos.push({ id: nextId++, text, done: false });
   input.value = '';
   renderTodos();
